@@ -51,7 +51,9 @@ class AuthController extends Controller
         if (User::where('no_ktp', $request->no_ktp)->exists()) {
             return back()->withErrors(['no_ktp' => 'Nomor Ktp Sudah terdaftar']);
         }
-
+        $lastPasien = User::where('role', 'pasien')->orderBy('id', 'desc')->first();
+$lastId = $lastPasien ? $lastPasien->id + 1 : 1;
+$no_rm = date('Ym') . '-' . str_pad($lastId, 3, '0', STR_PAD_LEFT);
         User::create([
             'nama' => $request->nama,
             'alamat' => $request->alamat,
@@ -70,4 +72,5 @@ class AuthController extends Controller
         Auth::logout();
         return redirect()->route('login');
     }
+    
 }
